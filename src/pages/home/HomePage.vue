@@ -125,8 +125,13 @@ const TECH_STACK = [
 
 <style lang="scss" module>
 .page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   width: 100%;
+  min-height: 0;
   padding-bottom: 24px;
+  overflow: hidden;
 }
 
 .container {
