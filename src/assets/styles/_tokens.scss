@@ -1,0 +1,54 @@
+:root {
+  --color-primary: #a27aff;
+  --color-primary-hover: #885fe8;
+  --color-primary-active: #5e39b6;
+  --color-primary-disabled: #ded0fa;
+
+  --color-error: #ff4d4f;
+  --color-error-hover: #d9363e;
+  --color-error-active: #b82a2d;
+  --color-error-disabled: #ffc7c7;
+
+  --color-success: #16803c;
+  --color-success-soft: #edf9f0;
+  --color-warning: #b45309;
+  --color-warning-soft: #fff7e6;
+  --color-error-soft: #fff1f1;
+  --color-info: #2563eb;
+  --color-info-soft: #eff6ff;
+
+  --color-surface-base: #ffffff;
+  --color-surface-page: #f8fafc;
+  --color-surface-primary-soft: #f3efff;
+  --color-surface-secondary: #eff1f9;
+  --color-surface-secondary-hover: #dde2ef;
+  --color-surface-secondary-active: #dde5ff;
+  --color-surface-disabled: #f3f4f6;
+  --color-table-row-even: rgb(0 0 0 / 0.03);
+
+  --color-skeleton-base: var(--color-surface-secondary);
+  --color-skeleton-highlight: rgba(255, 255, 255, 0.72);
+
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-inverse: #ffffff;
+  --color-text-disabled: #9ca3af;
+
+  --color-border-secondary: #d9e1ec;
+  --color-overlay: rgba(17, 24, 39, 0.64);
+  --color-icon-primary: var(--color-primary);
+  --color-icon-inverse: var(--color-text-inverse);
+  --color-icon-disabled: var(--color-text-disabled);
+
+  --input-shadow-primary: 0 0 1px 0 #a077ff, 0 0 0 3px rgba(160, 119, 255, 0.11);
+  --input-shadow-error: 0 0 1px 0 #ff4d4f, 0 0 0 3px rgba(255, 77, 79, 0.11);
+  --input-shadow-warning: 0 0 1px 0 #faad14, 0 0 0 3px rgba(250, 173, 20, 0.11);
+
+  --shadow: -6px 5px 14px #00000033;
+  --shadow-inset: inset 0 0 5px #c8afff9e;
+
+  --magenta-default: #fff0f6;
+  --magenta-hover: #ffd5e8;
+  --magenta-stroke-focused: #ffb5d6;
+  --magenta-text: #df1f88;
+}

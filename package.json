@@ -1,0 +1,61 @@
+{
+  "name": "ene",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": "^22.18.0 || >=24.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "lint": "run-p lint:eslint lint:prettier",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier --check .",
+    "lint:fix": "npm run lint:eslint -- --fix && npm run format",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@tiptap/pm": "^3.14.0",
+    "@tiptap/starter-kit": "^3.14.0",
+    "@tiptap/vue-3": "^3.14.0",
+    "pinia": "^4.0.2",
+    "vee-validate": "^4.15.1",
+    "vue": "rc",
+    "vue-router": "^5.2.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^7.7.3",
+    "@tsconfig/node24": "^24.0.4",
+    "@types/node": "^24.13.3",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
+    "eslint": "^10.7.0",
+    "jiti": "^2.7.0",
+    "npm-run-all2": "^9.0.2",
+    "prettier": "3.9.5",
+    "sass": "^1.93.2",
+    "typescript": "~6.0.0",
+    "vite": "^8.1.5",
+    "vite-plugin-vue-devtools": "^8.1.5",
+    "vue-tsc": "^3.3.7"
+  },
+  "overrides": {
+    "@vue/compat": "rc",
+    "@vue/compiler-core": "rc",
+    "@vue/compiler-dom": "rc",
+    "@vue/compiler-sfc": "rc",
+    "@vue/compiler-ssr": "rc",
+    "@vue/compiler-vapor": "rc",
+    "@vue/reactivity": "rc",
+    "@vue/runtime-core": "rc",
+    "@vue/runtime-dom": "rc",
+    "@vue/runtime-vapor": "rc",
+    "@vue/server-renderer": "rc",
+    "@vue/shared": "rc",
+    "vue": "rc"
+  }
+}
