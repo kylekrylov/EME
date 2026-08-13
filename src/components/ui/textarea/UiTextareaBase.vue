@@ -73,6 +73,7 @@ onMounted(async () => {
 
 defineExpose({
   focus: () => textareaRef.value?.focus(),
+  select: () => textareaRef.value?.select(),
 });
 </script>
 

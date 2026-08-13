@@ -4,7 +4,7 @@ import type { ITodoTask } from '@/stores/todo';
 import { nextTick, ref, useId, useTemplateRef } from 'vue';
 
 import { TODO_TITLE_MAX_LENGTH } from '@/stores/todo';
-import { UiButton, UiButtonIcon, UiCheckbox, UiInput } from '@ui';
+import { UiButton, UiButtonIcon, UiCheckbox, UiTextarea } from '@ui';
 
 interface Props {
   task: ITodoTask;
@@ -18,7 +18,7 @@ const emit = defineEmits<{
   update: [taskId: string, title: string];
 }>();
 
-const editInput = useTemplateRef<InstanceType<typeof UiInput>>('editInput');
+const editTextarea = useTemplateRef<InstanceType<typeof UiTextarea>>('editTextarea');
 const editErrorId = useId();
 const draftTitle = ref('');
 const editErrorMessage = ref('');
@@ -47,7 +47,7 @@ async function startEditing() {
   isEditing.value = true;
 
   await nextTick();
-  editInput.value?.select();
+  editTextarea.value?.select();
 }
 
 function toggleTask() {
@@ -70,14 +70,16 @@ function toggleTask() {
       :class="$style.editForm"
       @submit.prevent="saveTask"
     >
-      <UiInput
-        ref="editInput"
+      <UiTextarea
+        ref="editTextarea"
         v-model="draftTitle"
         :appearance="editErrorMessage ? 'error' : 'default'"
         :aria-describedby="editErrorMessage ? editErrorId : undefined"
         aria-label="Название задачи"
-        :clearable="false"
+        :max-height="160"
         :maxlength="TODO_TITLE_MAX_LENGTH"
+        :min-height="48"
+        :rows="1"
         @keydown.esc.prevent="cancelEditing"
       />
 
@@ -161,6 +163,7 @@ function toggleTask() {
   font-size: 16px;
   line-height: 24px;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .isCompleted .title {

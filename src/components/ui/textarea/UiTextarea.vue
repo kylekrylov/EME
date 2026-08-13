@@ -58,6 +58,7 @@ function handleFocus(event: FocusEvent) {
 
 defineExpose({
   focus: () => textareaRef.value?.focus(),
+  select: () => textareaRef.value?.select(),
 });
 </script>
 
