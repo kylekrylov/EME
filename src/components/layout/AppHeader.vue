@@ -27,8 +27,8 @@ const navigationItems = [
         <RouterLink
           v-for="{ routeName, title } in navigationItems"
           :key="routeName"
-          active-class="is-active"
           :class="$style.navigationLink"
+          exact-active-class="is-active"
           :to="{ name: routeName }"
         >
           {{ title }}
