@@ -54,8 +54,8 @@ onBeforeUnmount(() => {
     <PageHeader>
       <template #title>Infinite scroll лента</template>
       <template #requirements>
-        Публикации REST API, карточки с минимальной высотой 350px, скелетоны и дозагрузка во внутреннем
-        scroll-блоке.
+        Публикации REST API, карточки с минимальной высотой 350px, скелетоны и дозагрузка во
+        внутреннем scroll-блоке.
       </template>
       <template #implementation>
         JSONPlaceholder загружается порциями, IntersectionObserver следит за sentinel в

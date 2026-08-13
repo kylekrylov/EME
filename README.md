@@ -1,5 +1,7 @@
 # EME — тестовые задания для Frontend-разработчика
 
+Демо: [kylekrylov.github.io/EME](https://kylekrylov.github.io/EME/)
+
 ## Стек
 
 - Vue 3 + TypeScript + Vite;
