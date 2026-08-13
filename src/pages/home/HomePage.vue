@@ -42,9 +42,7 @@ const TECH_STACK = [
 <template>
   <div :class="$style.page">
     <PageHeader>
-      <template #title>
-        Тестовые задания Frontend-разработчика
-      </template>
+      <template #title> Тестовые задания Frontend-разработчика </template>
       <template #requirements>
         SPA из шести самостоятельных интерфейсных задач, каждая из которых оформлена на отдельной
         странице.
