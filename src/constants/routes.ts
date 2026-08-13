@@ -3,6 +3,10 @@ export const APP_ROUTES = {
     name: 'feedback',
     path: '/feedback',
   },
+  HOME: {
+    name: 'home',
+    path: '/',
+  },
   INFINITE_SCROLL: {
     name: 'infinite-scroll',
     path: '/infinite-scroll',

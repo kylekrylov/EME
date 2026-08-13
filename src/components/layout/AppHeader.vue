@@ -1,31 +1,12 @@
 <script setup lang="ts">
-import { APP_ROUTES } from '@/constants';
+import { APP_PAGES, APP_ROUTES } from '@/constants';
 
 const navigationItems = [
   {
-    label: 'Таблица пользователей',
-    routeName: APP_ROUTES.USERS.name,
+    routeName: APP_ROUTES.HOME.name,
+    title: 'Главная',
   },
-  {
-    label: 'Табы',
-    routeName: APP_ROUTES.TABS.name,
-  },
-  {
-    label: 'Форма обратной связи',
-    routeName: APP_ROUTES.FEEDBACK.name,
-  },
-  {
-    label: 'Модальное окно',
-    routeName: APP_ROUTES.MODAL.name,
-  },
-  {
-    label: 'Infinite scroll',
-    routeName: APP_ROUTES.INFINITE_SCROLL.name,
-  },
-  {
-    label: 'Список задач',
-    routeName: APP_ROUTES.TODO.name,
-  },
+  ...APP_PAGES,
 ];
 </script>
 
@@ -34,7 +15,7 @@ const navigationItems = [
     <div :class="$style.content">
       <RouterLink
         :class="$style.logo"
-        :to="{ name: APP_ROUTES.USERS.name }"
+        :to="{ name: APP_ROUTES.HOME.name }"
       >
         ЕМЕ
       </RouterLink>
@@ -44,13 +25,13 @@ const navigationItems = [
         :class="$style.navigation"
       >
         <RouterLink
-          v-for="{ label, routeName } in navigationItems"
+          v-for="{ routeName, title } in navigationItems"
           :key="routeName"
           active-class="is-active"
           :class="$style.navigationLink"
           :to="{ name: routeName }"
         >
-          {{ label }}
+          {{ title }}
         </RouterLink>
       </nav>
     </div>
