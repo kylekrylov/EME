@@ -130,6 +130,9 @@ const TECH_STACK = [
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   margin-top: 48px;
   padding: 24px;
 }
