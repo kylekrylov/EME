@@ -13,6 +13,13 @@ import { getUsers } from '@/api/users';
 
 import { USERS_DEFAULT_PAGE_SIZE, USERS_FILTER_ALL, USERS_PAGE_SIZES } from './constants';
 
+type ActiveUsersSortDirection = Exclude<TUsersSortDirection, null>;
+
+const SORT_DIRECTION_MULTIPLIER = {
+  asc: 1,
+  desc: -1,
+} as const satisfies Record<ActiveUsersSortDirection, number>;
+
 const usersCollator = new Intl.Collator('ru-RU', { numeric: true, sensitivity: 'base' });
 
 export const useUsersStore = defineStore('users', () => {
@@ -39,17 +46,18 @@ export const useUsersStore = defineStore('users', () => {
   );
 
   const sortedUsers = computed(() => {
-    if (!sortKey.value || !sortDirection.value) {
+    const activeSortDirection = sortDirection.value;
+
+    if (!sortKey.value || !activeSortDirection) {
       return filteredUsers.value;
     }
 
-    const directionMultiplier = sortDirection.value === 'asc' ? 1 : -1;
     const activeSortKey = sortKey.value;
 
     return [...filteredUsers.value].sort(
       (firstUser, secondUser) =>
         usersCollator.compare(firstUser[activeSortKey], secondUser[activeSortKey]) *
-        directionMultiplier,
+        SORT_DIRECTION_MULTIPLIER[activeSortDirection],
     );
   });
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TTabsPageValue } from './types';
+
 import { computed } from 'vue';
 
 import PageHeader from '@/components/layout/PageHeader.vue';
@@ -7,30 +9,34 @@ import { UiTabs, UiTabsContent } from '@ui';
 import { useTabsPage } from './composables/useTabsPage';
 import { TABS_PAGE_ITEMS } from './constants';
 
-const { activeTab, direction, tabsId } = useTabsPage();
+interface TabsPageContent {
+  eyebrow: string;
+  text: string;
+  title: string;
+}
 
-const activeContent = computed(() => {
-  if (activeTab.value === 'features') {
-    return {
-      eyebrow: 'Возможности',
-      text: 'Компонент управляется через v-model, поддерживает любое количество вкладок и умеет пропускать отключённые пункты.',
-      title: 'Простой API для разных сценариев',
-    };
-  }
-
-  if (activeTab.value === 'accessibility') {
-    return {
-      eyebrow: 'Доступность',
-      text: 'Стрелки переключают вкладки, Home и End переходят к краям списка, а роли tablist, tab и tabpanel связывают интерфейс для скринридеров.',
-      title: 'Управление без мыши',
-    };
-  }
-
-  return {
+const TAB_CONTENT_BY_VALUE = {
+  accessibility: {
+    eyebrow: 'Доступность',
+    text: 'Стрелки переключают вкладки, Home и End переходят к краям списка, а роли tablist, tab и tabpanel связывают интерфейс для скринридеров.',
+    title: 'Управление без мыши',
+  },
+  features: {
+    eyebrow: 'Возможности',
+    text: 'Компонент управляется через v-model, поддерживает любое количество вкладок и умеет пропускать отключённые пункты.',
+    title: 'Простой API для разных сценариев',
+  },
+  overview: {
     eyebrow: 'Описание',
     text: 'Активная вкладка сохраняется в query-параметре URL, поэтому выбранный раздел можно открыть напрямую или отправить ссылкой.',
     title: 'Вкладки с сохранением состояния',
-  };
+  },
+} as const satisfies Record<TTabsPageValue, TabsPageContent>;
+
+const { activeTab, direction, tabsId } = useTabsPage();
+
+const activeContent = computed(() => {
+  return TAB_CONTENT_BY_VALUE[activeTab.value];
 });
 </script>
 

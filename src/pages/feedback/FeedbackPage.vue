@@ -1,11 +1,32 @@
 <script setup lang="ts">
+import type { TFeedbackSubmissionState } from '@/stores/feedback';
+import type { TAlertAppearance } from '@ui';
+
 import { computed } from 'vue';
 
 import PageHeader from '@/components/layout/PageHeader.vue';
-import { FEEDBACK_FIELD_LIMITS, FEEDBACK_SUBMISSION_STATES } from '@/stores/feedback';
+import { FEEDBACK_FIELD_LIMITS } from '@/stores/feedback';
 import { UiAlert, UiButton, UiField, UiInput, UiTextarea } from '@ui';
 
 import { useFeedbackPage } from './composables/useFeedbackPage';
+
+interface SubmissionAlert {
+  appearance: TAlertAppearance;
+  title: string;
+}
+
+const SUBMISSION_ALERT_BY_STATE = {
+  error: {
+    appearance: 'error',
+    title: 'Сообщение не отправлено',
+  },
+  idle: null,
+  submitting: null,
+  success: {
+    appearance: 'success',
+    title: 'Сообщение отправлено',
+  },
+} as const satisfies Record<TFeedbackSubmissionState, SubmissionAlert | null>;
 
 const {
   dismissSubmissionMessage,
@@ -23,19 +44,9 @@ const {
   submitForm,
 } = useFeedbackPage();
 
-const alertAppearance = computed(() =>
-  submissionState.value === FEEDBACK_SUBMISSION_STATES.ERROR ? 'error' : 'success',
-);
-const alertTitle = computed(() =>
-  submissionState.value === FEEDBACK_SUBMISSION_STATES.ERROR
-    ? 'Сообщение не отправлено'
-    : 'Сообщение отправлено',
-);
-const isSubmissionAlertVisible = computed(
-  () =>
-    submissionState.value === FEEDBACK_SUBMISSION_STATES.ERROR ||
-    submissionState.value === FEEDBACK_SUBMISSION_STATES.SUCCESS,
-);
+const submissionAlert = computed(() => {
+  return SUBMISSION_ALERT_BY_STATE[submissionState.value];
+});
 </script>
 
 <template>
@@ -52,11 +63,11 @@ const isSubmissionAlertVisible = computed(
     </PageHeader>
 
     <UiAlert
-      v-if="isSubmissionAlertVisible"
-      :appearance="alertAppearance"
+      v-if="submissionAlert"
+      :appearance="submissionAlert.appearance"
       :class="$style.alert"
       :text="submissionMessage"
-      :title="alertTitle"
+      :title="submissionAlert.title"
       @close="dismissSubmissionMessage"
     />
 

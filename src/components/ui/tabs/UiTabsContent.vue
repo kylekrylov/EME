@@ -9,19 +9,39 @@ interface Props {
   tabsId: string;
 }
 
+interface DirectionalTransitionClassNames {
+  enterFrom: string;
+  leaveTo: string;
+}
+
 const { activeValue, direction = 'left', tabsId } = defineProps<Props>();
+
+const TRANSITION_CLASS_NAMES_BY_DIRECTION = {
+  left: {
+    enterFrom: 'enterFromRight',
+    leaveTo: 'leaveToLeft',
+  },
+  right: {
+    enterFrom: 'enterFromLeft',
+    leaveTo: 'leaveToRight',
+  },
+} as const satisfies Record<TTabsDirection, DirectionalTransitionClassNames>;
 
 const styles = useCssModule();
 
 const labelledBy = computed(() => `${tabsId}-tab-${activeValue}`);
 const panelId = computed(() => `${tabsId}-panel-${activeValue}`);
 
-const transitionClasses = computed(() => ({
-  enterActiveClass: styles.enterActive,
-  enterFromClass: direction === 'left' ? styles.enterFromRight : styles.enterFromLeft,
-  leaveActiveClass: styles.leaveActive,
-  leaveToClass: direction === 'left' ? styles.leaveToLeft : styles.leaveToRight,
-}));
+const transitionClasses = computed(() => {
+  const directionalClassNames = TRANSITION_CLASS_NAMES_BY_DIRECTION[direction];
+
+  return {
+    enterActiveClass: styles.enterActive,
+    enterFromClass: styles[directionalClassNames.enterFrom],
+    leaveActiveClass: styles.leaveActive,
+    leaveToClass: styles[directionalClassNames.leaveTo],
+  };
+});
 </script>
 
 <template>

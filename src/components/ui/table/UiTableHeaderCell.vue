@@ -12,36 +12,47 @@ interface Props {
   sortDirection?: TUiTableSortDirection;
 }
 
+interface SortPresentation {
+  ariaSort: 'ascending' | 'descending';
+  marker: string;
+}
+
+type ActiveSortDirection = Exclude<TUiTableSortDirection, null>;
+
 const { align = 'left', label, sortable = false, sortDirection = null } = defineProps<Props>();
 
 defineEmits<{
   sort: [];
 }>();
 
-const ariaSort = computed(() => {
+const DEFAULT_SORT_PRESENTATION = {
+  ariaSort: 'none',
+  marker: '↕',
+} as const;
+
+const SORT_PRESENTATION_BY_DIRECTION = {
+  asc: {
+    ariaSort: 'ascending',
+    marker: '↑',
+  },
+  desc: {
+    ariaSort: 'descending',
+    marker: '↓',
+  },
+} as const satisfies Record<ActiveSortDirection, SortPresentation>;
+
+const sortPresentation = computed(() => {
   if (!sortable || !sortDirection) {
-    return 'none';
+    return DEFAULT_SORT_PRESENTATION;
   }
 
-  return sortDirection === 'asc' ? 'ascending' : 'descending';
-});
-
-const sortMarker = computed(() => {
-  if (sortDirection === 'asc') {
-    return '↑';
-  }
-
-  if (sortDirection === 'desc') {
-    return '↓';
-  }
-
-  return '↕';
+  return SORT_PRESENTATION_BY_DIRECTION[sortDirection];
 });
 </script>
 
 <template>
   <th
-    :aria-sort="ariaSort"
+    :aria-sort="sortPresentation.ariaSort"
     :class="[$style.cell, $style[`align-${align}`]]"
     scope="col"
   >
@@ -56,7 +67,7 @@ const sortMarker = computed(() => {
         aria-hidden="true"
         :class="[$style.sortMarker, { [$style.isActive]: sortDirection }]"
       >
-        {{ sortMarker }}
+        {{ sortPresentation.marker }}
       </span>
     </UiButtonBase>
     <span v-else>{{ label }}</span>

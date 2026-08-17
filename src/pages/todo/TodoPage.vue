@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TTodoFilter } from '@/stores/todo';
+
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 
@@ -8,6 +10,12 @@ import { UiButton, UiModal, UiScrollContainer } from '@ui';
 import TodoFilters from './components/TodoFilters.vue';
 import TodoForm from './components/TodoForm.vue';
 import TodoItem from './components/TodoItem.vue';
+
+const EMPTY_STATE_TEXT_BY_FILTER = {
+  active: 'Активных задач нет.',
+  all: 'Задач для отображения нет.',
+  completed: 'Выполненных задач пока нет.',
+} as const satisfies Record<TTodoFilter, string>;
 
 const todoStore = useTodoStore();
 const { activeCount, activeFilter, completedCount, filteredTasks, tasks } = storeToRefs(todoStore);
@@ -25,15 +33,7 @@ const emptyStateText = computed(() => {
     return 'Пока нет задач. Добавьте первую задачу с помощью формы выше.';
   }
 
-  if (activeFilter.value === TODO_FILTERS.ACTIVE) {
-    return 'Активных задач нет.';
-  }
-
-  if (activeFilter.value === TODO_FILTERS.COMPLETED) {
-    return 'Выполненных задач пока нет.';
-  }
-
-  return 'Задач для отображения нет.';
+  return EMPTY_STATE_TEXT_BY_FILTER[activeFilter.value];
 });
 
 function addTodoTask(title: string) {

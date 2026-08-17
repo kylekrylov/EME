@@ -12,37 +12,57 @@ interface Props {
   title: string;
 }
 
+interface AlertPresentation {
+  ariaLive: 'assertive' | 'polite';
+  marker: string;
+  role: 'alert' | 'status';
+}
+
 const { appearance = 'info', closable = true } = defineProps<Props>();
 
 defineEmits<{
   close: [];
 }>();
 
-const alertRole = computed(() => (appearance === 'error' ? 'alert' : 'status'));
-const marker = computed(() => {
-  if (appearance === 'success') {
-    return '✓';
-  }
+const ALERT_PRESENTATION_BY_APPEARANCE = {
+  error: {
+    ariaLive: 'assertive',
+    marker: '!',
+    role: 'alert',
+  },
+  info: {
+    ariaLive: 'polite',
+    marker: 'i',
+    role: 'status',
+  },
+  success: {
+    ariaLive: 'polite',
+    marker: '✓',
+    role: 'status',
+  },
+  warning: {
+    ariaLive: 'polite',
+    marker: '!',
+    role: 'status',
+  },
+} as const satisfies Record<TAlertAppearance, AlertPresentation>;
 
-  if (appearance === 'error' || appearance === 'warning') {
-    return '!';
-  }
-
-  return 'i';
+const presentation = computed(() => {
+  return ALERT_PRESENTATION_BY_APPEARANCE[appearance];
 });
 </script>
 
 <template>
   <div
-    :aria-live="appearance === 'error' ? 'assertive' : 'polite'"
+    :aria-live="presentation.ariaLive"
     :class="[$style.alert, $style[`appearance-${appearance}`]]"
-    :role="alertRole"
+    :role="presentation.role"
   >
     <span
       aria-hidden="true"
       :class="$style.marker"
     >
-      {{ marker }}
+      {{ presentation.marker }}
     </span>
 
     <div :class="$style.content">
