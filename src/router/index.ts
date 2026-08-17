@@ -1,8 +1,53 @@
+import type { RouteComponent, RouteRecordRaw } from 'vue-router';
+import type { ResolvedPageDefinition } from '@/constants';
+
 import { createRouter, createWebHistory } from 'vue-router';
 
-import { APP_ROUTES } from '@/constants';
+import { PAGE_DEFINITIONS, RESOLVED_PAGE_DEFINITIONS } from '@/constants';
 
 import { updateDocumentMeta } from './meta';
+
+type PageComponentLoader = () => Promise<{ default: RouteComponent }>;
+
+const LEADING_SLASH_PATTERN = /^\//;
+const PAGE_COMPONENTS: Readonly<Record<string, PageComponentLoader>> = {
+  [PAGE_DEFINITIONS.FEEDBACK.name]: () => import('@/pages/feedback/FeedbackPage.vue'),
+  [PAGE_DEFINITIONS.HOME.name]: () => import('@/pages/home/HomePage.vue'),
+  [PAGE_DEFINITIONS.INFINITE_SCROLL.name]: () =>
+    import('@/pages/infinite-scroll/InfiniteScrollPage.vue'),
+  [PAGE_DEFINITIONS.MODAL.name]: () => import('@/pages/modal/ModalPage.vue'),
+  [PAGE_DEFINITIONS.TABS.name]: () => import('@/pages/tabs/TabsPage.vue'),
+  [PAGE_DEFINITIONS.TODO.name]: () => import('@/pages/todo/TodoPage.vue'),
+  [PAGE_DEFINITIONS.USERS.name]: () => import('@/pages/users/UsersPage.vue'),
+};
+
+function createPageRoutes(
+  pages: readonly ResolvedPageDefinition[],
+  isLayoutChild = true,
+): RouteRecordRaw[] {
+  return pages.map((page) => {
+    const component = PAGE_COMPONENTS[page.name];
+
+    if (!component) {
+      throw new Error(`Для страницы "${page.name}" не задан загрузчик компонента`);
+    }
+
+    return {
+      path: isLayoutChild ? page.routePath.replace(LEADING_SLASH_PATTERN, '') : page.routePath,
+      name: page.name,
+      component,
+      meta: {
+        description: page.metaDescription,
+        title: page.title,
+      },
+      ...(page.children.length > 0 && {
+        children: createPageRoutes(page.children, false),
+      }),
+    };
+  });
+}
+
+const pageRoutes = createPageRoutes(RESOLVED_PAGE_DEFINITIONS);
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,78 +55,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/layouts/DefaultLayout.vue'),
-      children: [
-        {
-          path: '',
-          name: APP_ROUTES.HOME.name,
-          component: () => import('@/pages/home/HomePage.vue'),
-          meta: {
-            description:
-              'Шесть тестовых заданий Frontend-разработчика на Vue 3 и TypeScript с общей UI-библиотекой и архитектурой.',
-            title: 'Главная',
-          },
-        },
-        {
-          path: APP_ROUTES.USERS.path.slice(1),
-          name: APP_ROUTES.USERS.name,
-          component: () => import('@/pages/users/UsersPage.vue'),
-          meta: {
-            description:
-              'Таблица пользователей с сортировкой, фильтрами по роли и статусу и клиентской пагинацией.',
-            title: 'Таблица пользователей',
-          },
-        },
-        {
-          path: APP_ROUTES.TABS.path.slice(1),
-          name: APP_ROUTES.TABS.name,
-          component: () => import('@/pages/tabs/TabsPage.vue'),
-          meta: {
-            description:
-              'Демонстрация доступных вкладок с анимацией контента, клавиатурной навигацией и синхронизацией с URL.',
-            title: 'Табы',
-          },
-        },
-        {
-          path: APP_ROUTES.FEEDBACK.path.slice(1),
-          name: APP_ROUTES.FEEDBACK.name,
-          component: () => import('@/pages/feedback/FeedbackPage.vue'),
-          meta: {
-            description:
-              'Форма обратной связи с валидацией имени, email и сообщения, сохранением черновика и отправкой в mock API.',
-            title: 'Форма обратной связи',
-          },
-        },
-        {
-          path: APP_ROUTES.MODAL.path.slice(1),
-          name: APP_ROUTES.MODAL.name,
-          component: () => import('@/pages/modal/ModalPage.vue'),
-          meta: {
-            description:
-              'Доступное модальное окно с focus trap, блокировкой прокрутки, действиями отмены и подтверждения и состоянием загрузки.',
-            title: 'Модальное окно',
-          },
-        },
-        {
-          path: APP_ROUTES.INFINITE_SCROLL.path.slice(1),
-          name: APP_ROUTES.INFINITE_SCROLL.name,
-          component: () => import('@/pages/infinite-scroll/InfiniteScrollPage.vue'),
-          meta: {
-            description:
-              'Лента публикаций JSONPlaceholder с бесконечной прокруткой, порционной загрузкой и skeleton-состояниями.',
-            title: 'Infinite scroll лента',
-          },
-        },
-        {
-          path: APP_ROUTES.TODO.path.slice(1),
-          name: APP_ROUTES.TODO.name,
-          component: () => import('@/pages/todo/TodoPage.vue'),
-          meta: {
-            description:
-              'Список задач с созданием, inline-редактированием, фильтрацией, сохранением в localStorage и подтверждением удаления.',
-            title: 'Список задач',
-          },
-        },
-      ],
+      children: pageRoutes,
     },
     {
       path: '/:pathMatch(.*)*',

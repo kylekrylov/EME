@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import { APP_PAGES, APP_ROUTES } from '@/constants';
-
-const navigationItems = [
-  {
-    routeName: APP_ROUTES.HOME.name,
-    title: 'Главная',
-  },
-  ...APP_PAGES,
-];
+import { NAVIGATION_PAGES, PAGE_DEFINITIONS } from '@/constants';
 </script>
 
 <template>
@@ -15,7 +7,7 @@ const navigationItems = [
     <div :class="$style.content">
       <RouterLink
         :class="$style.logo"
-        :to="{ name: APP_ROUTES.HOME.name }"
+        :to="{ name: PAGE_DEFINITIONS.HOME.name }"
       >
         ЕМЕ
       </RouterLink>
@@ -25,11 +17,11 @@ const navigationItems = [
         :class="$style.navigation"
       >
         <RouterLink
-          v-for="{ routeName, title } in navigationItems"
-          :key="routeName"
+          v-for="{ name, title } in NAVIGATION_PAGES"
+          :key="name"
           :class="$style.navigationLink"
           exact-active-class="is-active"
-          :to="{ name: routeName }"
+          :to="{ name }"
         >
           {{ title }}
         </RouterLink>

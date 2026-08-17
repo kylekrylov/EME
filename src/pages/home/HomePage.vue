@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageHeader from '@/components/layout/PageHeader.vue';
-import { APP_PAGES } from '@/constants';
+import { TASK_PAGES } from '@/constants';
 import { UiScrollContainer } from '@ui';
 
 const TECH_STACK = [
@@ -57,7 +57,7 @@ const TECH_STACK = [
       <section aria-labelledby="pages-heading">
         <div :class="$style.sectionHeader">
           <div>
-            <p :class="$style.eyebrow">6 заданий</p>
+            <p :class="$style.eyebrow">{{ TASK_PAGES.length }} заданий</p>
             <h2
               id="pages-heading"
               :class="$style.sectionTitle"
@@ -72,16 +72,16 @@ const TECH_STACK = [
 
         <ol :class="$style.pages">
           <li
-            v-for="({ description, routeName, title }, index) in APP_PAGES"
-            :key="routeName"
+            v-for="({ name, summary, title }, index) in TASK_PAGES"
+            :key="name"
           >
             <RouterLink
               :class="$style.pageCard"
-              :to="{ name: routeName }"
+              :to="{ name }"
             >
               <span :class="$style.pageNumber">{{ String(index + 1).padStart(2, '0') }}</span>
               <h3 :class="$style.pageTitle">{{ title }}</h3>
-              <p :class="$style.pageDescription">{{ description }}</p>
+              <p :class="$style.pageDescription">{{ summary }}</p>
               <span :class="$style.pageAction">
                 Открыть страницу
                 <span aria-hidden="true">→</span>
